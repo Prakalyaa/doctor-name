@@ -131,7 +131,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-blue-600 py-4">
+      <div className="bg-blue-900 py-4">
         <SearchBar doctors={doctors} onSearch={handleSearch} />
       </div>
       <div className="container mx-auto px-4 py-8">
