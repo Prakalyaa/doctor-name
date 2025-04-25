@@ -13,13 +13,16 @@ export const SearchBar = ({ doctors, onSearch }: SearchBarProps) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   useEffect(() => {
-    if (query.trim()) {
-      const matches = doctors
-        .filter(doc => 
-          doc.name.toLowerCase().includes(query.toLowerCase())
-        )
-        .map(doc => doc.name)
-        .slice(0, 3);
+    if (query?.trim()) {
+      const matches = Array.isArray(doctors) 
+        ? doctors
+            .filter(doc => 
+              doc && doc.name && doc.name.toLowerCase().includes(query.toLowerCase())
+            )
+            .map(doc => doc.name)
+            .filter(Boolean)
+            .slice(0, 3)
+        : [];
       setSuggestions(matches);
     } else {
       setSuggestions([]);
@@ -32,10 +35,11 @@ export const SearchBar = ({ doctors, onSearch }: SearchBarProps) => {
         <Input
           data-testid="autocomplete-input"
           placeholder="Search Symptoms, Doctors, Specialists, Clinics"
-          value={query}
+          value={query || ""}
           onChange={(e) => {
-            setQuery(e.target.value);
-            onSearch(e.target.value);
+            const value = e.target.value;
+            setQuery(value);
+            onSearch(value);
           }}
           className="pl-10 pr-4 py-2 w-full"
         />
@@ -49,9 +53,11 @@ export const SearchBar = ({ doctors, onSearch }: SearchBarProps) => {
               data-testid="suggestion-item"
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
               onClick={() => {
-                setQuery(suggestion);
-                onSearch(suggestion);
-                setSuggestions([]);
+                if (suggestion) {
+                  setQuery(suggestion);
+                  onSearch(suggestion);
+                  setSuggestions([]);
+                }
               }}
             >
               {suggestion}
