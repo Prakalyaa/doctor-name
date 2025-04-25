@@ -26,7 +26,6 @@ const Index = () => {
         const data = await fetchDoctors();
         setDoctors(data);
         
-        // Extract unique specialties from the specialities array objects
         const allSpecialties = Array.from(
           new Set(data.flatMap(doctor => doctor.specialities?.map(s => s.name) || []).filter(Boolean))
         );
