@@ -26,9 +26,9 @@ const Index = () => {
         const data = await fetchDoctors();
         setDoctors(data);
         
-        // Extract unique specialties, ensuring no undefined values
+        // Extract unique specialties from the specialities array objects
         const allSpecialties = Array.from(
-          new Set(data.flatMap(doctor => doctor.specialty || []).filter(Boolean))
+          new Set(data.flatMap(doctor => doctor.specialities?.map(s => s.name) || []).filter(Boolean))
         );
         setSpecialties(allSpecialties);
       } catch (error) {
@@ -53,20 +53,24 @@ const Index = () => {
     // Apply specialty filter
     if (selectedSpecialties.length > 0) {
       filtered = filtered.filter(doctor =>
-        (doctor.specialty || []).some(s => s && selectedSpecialties.includes(s))
+        doctor.specialities?.some(s => s.name && selectedSpecialties.includes(s.name))
       );
     }
 
     // Apply consultation type filter
-    if (consultationType) {
-      filtered = filtered.filter(
-        doctor => doctor.consultationType === consultationType
-      );
+    if (consultationType === "Video Consult") {
+      filtered = filtered.filter(doctor => doctor.video_consult);
+    } else if (consultationType === "In Clinic") {
+      filtered = filtered.filter(doctor => doctor.in_clinic);
     }
 
     // Apply sorting
     if (sortBy === "fees") {
-      filtered.sort((a, b) => (a.fee || 0) - (b.fee || 0));
+      filtered.sort((a, b) => {
+        const feeA = parseInt(String(a.fees || "0").replace(/\D/g, "")) || 0;
+        const feeB = parseInt(String(b.fees || "0").replace(/\D/g, "")) || 0;
+        return feeA - feeB;
+      });
     } else if (sortBy === "experience") {
       filtered.sort((a, b) => {
         const expA = parseInt(String(a.experience || "0").replace(/\D/g, "")) || 0;
