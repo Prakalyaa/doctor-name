@@ -1,11 +1,19 @@
 
 export interface Doctor {
   name: string;
-  specialty: string[];
-  qualification: string;
+  specialities: Array<{ name: string }>;
+  doctor_introduction?: string;
+  fees: string;
   experience: string;
-  clinic: string;
-  location: string;
-  fee: number;
-  consultationType: "Video Consult" | "In Clinic";
+  languages: string[];
+  clinic: {
+    name: string;
+    address: {
+      locality: string;
+      city: string;
+    }
+  };
+  photo?: string;
+  video_consult: boolean;
+  in_clinic: boolean;
 }

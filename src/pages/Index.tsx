@@ -149,10 +149,10 @@ const Index = () => {
                 onSortChange={handleSortChange}
               />
             </div>
-            <div className="md:col-span-3">
+            <div className="md:col-span-3 space-y-4">
               {filteredDoctors.length > 0 ? (
                 filteredDoctors.map((doctor, index) => (
-                  <DoctorCard key={index} doctor={doctor} />
+                  <DoctorCard key={doctor.name + index} doctor={doctor} />
                 ))
               ) : (
                 <div className="bg-white p-4 rounded shadow text-center">
